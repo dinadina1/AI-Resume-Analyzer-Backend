@@ -1,0 +1,255 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "AI Resume Analyzer API",
+    "version": "1.0.0",
+    "description": "Production-ready AI Resume Analyzer — ATS scoring, JD matching, async processing, and LLM suggestions.",
+    "contact": {
+      "name": "ResumeAI Team",
+      "email": "support@airesumeanalyzer.com"
+    }
+  },
+  "servers": [
+    { "url": "http://localhost:3000/api/v1", "description": "Local Development" }
+  ],
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "ApiResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "message": { "type": "string" },
+          "data": {}
+        }
+      },
+      "SignupRequest": {
+        "type": "object",
+        "required": ["name", "email", "password"],
+        "properties": {
+          "name": { "type": "string", "example": "John Doe" },
+          "email": { "type": "string", "format": "email", "example": "john@example.com" },
+          "password": { "type": "string", "minLength": 8, "example": "Test@1234" }
+        }
+      },
+      "LoginRequest": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email": { "type": "string", "format": "email" },
+          "password": { "type": "string" }
+        }
+      }
+    }
+  },
+  "security": [{ "BearerAuth": [] }],
+  "paths": {
+    "/auth/signup": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Create a new account",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SignupRequest" } } }
+        },
+        "responses": {
+          "201": { "description": "Account created successfully" },
+          "409": { "description": "Email already exists" }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Login with email and password",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/LoginRequest" } } }
+        },
+        "responses": {
+          "200": { "description": "Login successful" },
+          "401": { "description": "Invalid credentials" }
+        }
+      }
+    },
+    "/auth/refresh": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Refresh access token",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "type": "object", "properties": { "refreshToken": { "type": "string" } } } } }
+        },
+        "responses": { "200": { "description": "Tokens refreshed" } }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Logout current session",
+        "responses": { "200": { "description": "Logged out" } }
+      }
+    },
+    "/auth/me": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "Get current user",
+        "responses": { "200": { "description": "User profile" } }
+      }
+    },
+    "/resumes/upload": {
+      "post": {
+        "tags": ["Resumes"],
+        "summary": "Upload a PDF resume",
+        "requestBody": {
+          "required": true,
+          "content": { "multipart/form-data": { "schema": { "type": "object", "properties": { "resume": { "type": "string", "format": "binary" } } } } }
+        },
+        "responses": {
+          "201": { "description": "Resume uploaded and queued for analysis" },
+          "400": { "description": "Invalid file type or size" }
+        }
+      }
+    },
+    "/resumes": {
+      "get": {
+        "tags": ["Resumes"],
+        "summary": "Get all resumes for the current user",
+        "parameters": [
+          { "in": "query", "name": "page", "schema": { "type": "integer", "default": 1 } },
+          { "in": "query", "name": "limit", "schema": { "type": "integer", "default": 10 } }
+        ],
+        "responses": { "200": { "description": "List of resumes" } }
+      }
+    },
+    "/resumes/{id}": {
+      "get": {
+        "tags": ["Resumes"],
+        "summary": "Get a single resume",
+        "parameters": [{ "in": "path", "name": "id", "required": true, "schema": { "type": "string" } }],
+        "responses": { "200": { "description": "Resume details" }, "404": { "description": "Not found" } }
+      },
+      "delete": {
+        "tags": ["Resumes"],
+        "summary": "Delete a resume",
+        "parameters": [{ "in": "path", "name": "id", "required": true, "schema": { "type": "string" } }],
+        "responses": { "200": { "description": "Resume deleted" } }
+      }
+    },
+    "/resumes/{id}/status": {
+      "get": {
+        "tags": ["Resumes"],
+        "summary": "Get resume analysis status",
+        "parameters": [{ "in": "path", "name": "id", "required": true, "schema": { "type": "string" } }],
+        "responses": { "200": { "description": "Analysis status and score" } }
+      }
+    },
+    "/analysis/resume/{resumeId}": {
+      "get": {
+        "tags": ["Analysis"],
+        "summary": "Get analysis reports for a resume",
+        "parameters": [{ "in": "path", "name": "resumeId", "required": true, "schema": { "type": "string" } }],
+        "responses": { "200": { "description": "List of analysis reports" } }
+      }
+    },
+    "/analysis/{id}": {
+      "get": {
+        "tags": ["Analysis"],
+        "summary": "Get a single analysis report",
+        "parameters": [{ "in": "path", "name": "id", "required": true, "schema": { "type": "string" } }],
+        "responses": { "200": { "description": "Analysis report with scores and suggestions" } }
+      }
+    },
+    "/job-descriptions/match": {
+      "post": {
+        "tags": ["JD Matching"],
+        "summary": "Match resume skills against a job description",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["resumeId", "title", "content"],
+                "properties": {
+                  "resumeId": { "type": "string" },
+                  "title": { "type": "string", "example": "Senior React Developer" },
+                  "content": { "type": "string", "example": "We are looking for a React developer with TypeScript..." }
+                }
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Match result with percentage and skill gaps" } }
+      }
+    },
+    "/job-descriptions/matches": {
+      "get": {
+        "tags": ["JD Matching"],
+        "summary": "Get all JD match history",
+        "responses": { "200": { "description": "List of past JD matches" } }
+      }
+    },
+    "/suggestions/resume/{resumeId}": {
+      "get": {
+        "tags": ["Suggestions"],
+        "summary": "Get suggestions for a resume",
+        "parameters": [{ "in": "path", "name": "resumeId", "required": true, "schema": { "type": "string" } }],
+        "responses": { "200": { "description": "List of improvement suggestions" } }
+      }
+    },
+    "/llm/config": {
+      "get": {
+        "tags": ["LLM"],
+        "summary": "Get LLM config status (no key exposed)",
+        "responses": { "200": { "description": "LLM config info" } }
+      },
+      "post": {
+        "tags": ["LLM"],
+        "summary": "Save/update LLM API key",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "apiKey": { "type": "string" },
+                  "isEnabled": { "type": "boolean" }
+                }
+              }
+            }
+          }
+        },
+        "responses": { "200": { "description": "Config saved" } }
+      }
+    },
+    "/llm/config/toggle": {
+      "patch": {
+        "tags": ["LLM"],
+        "summary": "Enable or disable LLM usage",
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "type": "object", "properties": { "isEnabled": { "type": "boolean" } } } } }
+        },
+        "responses": { "200": { "description": "LLM toggled" } }
+      }
+    },
+    "/llm/usage": {
+      "get": {
+        "tags": ["LLM"],
+        "summary": "Get token usage summary",
+        "responses": { "200": { "description": "Token usage and estimated cost" } }
+      }
+    }
+  }
+}

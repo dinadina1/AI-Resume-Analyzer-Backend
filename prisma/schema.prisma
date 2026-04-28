@@ -1,0 +1,261 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Enums ───────────────────────────────────────────────────────────────────
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum ResumeStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+enum AnalysisStatus {
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+enum SuggestionSource {
+  RULE_BASED
+  AI
+}
+
+enum LlmProvider {
+  OPENAI
+  GEMINI
+  ANTHROPIC
+  OLLAMA
+  MISTRAL
+  GROQ
+}
+
+// ─── Users ───────────────────────────────────────────────────────────────────
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  role      Role     @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  credentials    UserCredential?
+  sessions       Session[]
+  resumes        Resume[]
+  jobDescriptions JobDescription[]
+  llmConfig      UserLlmConfig?
+  llmUsageLogs   LlmUsageLog[]
+
+  @@map("users")
+}
+
+model UserCredential {
+  id           String   @id @default(uuid())
+  userId       String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_credentials")
+}
+
+model Session {
+  id           String   @id @default(uuid())
+  userId       String
+  refreshToken String   @unique
+  expiresAt    DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("sessions")
+}
+
+// ─── Resumes ─────────────────────────────────────────────────────────────────
+
+model Resume {
+  id           String       @id @default(uuid())
+  userId       String
+  originalName String
+  fileName     String       @unique
+  filePath     String
+  mimeType     String
+  fileSize     Int
+  status       ResumeStatus @default(PENDING)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  versions        ResumeVersion[]
+  analysisReports AnalysisReport[]
+  resumeSkills    ResumeSkill[]
+  jdMatches       JdMatch[]
+  suggestions     Suggestion[]
+
+  @@index([userId])
+  @@map("resumes")
+}
+
+model ResumeVersion {
+  id        String   @id @default(uuid())
+  resumeId  String
+  version   Int
+  fileName  String
+  filePath  String
+  createdAt DateTime @default(now())
+
+  resume Resume @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+
+  @@unique([resumeId, version])
+  @@map("resume_versions")
+}
+
+// ─── Analysis ────────────────────────────────────────────────────────────────
+
+model AnalysisReport {
+  id             String         @id @default(uuid())
+  resumeId       String
+  status         AnalysisStatus @default(PROCESSING)
+  overallScore   Float          @default(0)
+  skillsScore    Float          @default(0)
+  keywordsScore  Float          @default(0)
+  experienceScore Float         @default(0)
+  formattingScore Float         @default(0)
+  rawText        String         @db.Text
+  extractedSkills String[]
+  feedback       Json?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  resume      Resume       @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+  suggestions Suggestion[]
+
+  @@index([resumeId])
+  @@map("analysis_reports")
+}
+
+// ─── Skills ──────────────────────────────────────────────────────────────────
+
+model Skill {
+  id           String        @id @default(uuid())
+  name         String        @unique
+  createdAt    DateTime      @default(now())
+
+  resumeSkills ResumeSkill[]
+
+  @@map("skills")
+}
+
+model ResumeSkill {
+  id       String @id @default(uuid())
+  resumeId String
+  skillId  String
+
+  resume Resume @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+  skill  Skill  @relation(fields: [skillId], references: [id], onDelete: Cascade)
+
+  @@unique([resumeId, skillId])
+  @@map("resume_skills")
+}
+
+// ─── Job Descriptions ────────────────────────────────────────────────────────
+
+model JobDescription {
+  id              String   @id @default(uuid())
+  userId          String
+  title           String
+  content         String   @db.Text
+  extractedSkills String[]
+  createdAt       DateTime @default(now())
+
+  user    User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  matches JdMatch[]
+
+  @@index([userId])
+  @@map("job_descriptions")
+}
+
+model JdMatch {
+  id              String   @id @default(uuid())
+  jobDescriptionId String
+  resumeId        String
+  matchPercentage Float
+  matchedSkills   String[]
+  missingSkills   String[]
+  createdAt       DateTime @default(now())
+
+  jobDescription JobDescription @relation(fields: [jobDescriptionId], references: [id], onDelete: Cascade)
+  resume         Resume         @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+
+  @@map("jd_matches")
+}
+
+// ─── Suggestions ─────────────────────────────────────────────────────────────
+
+model Suggestion {
+  id               String           @id @default(uuid())
+  resumeId         String
+  analysisReportId String?
+  category         String
+  message          String           @db.Text
+  priority         Int              @default(5)
+  source           SuggestionSource @default(RULE_BASED)
+  createdAt        DateTime         @default(now())
+
+  resume         Resume          @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+  analysisReport AnalysisReport? @relation(fields: [analysisReportId], references: [id])
+
+  @@index([resumeId])
+  @@map("suggestions")
+}
+
+// ─── LLM ─────────────────────────────────────────────────────────────────────
+
+model UserLlmConfig {
+  id              String      @id @default(uuid())
+  userId          String      @unique
+  provider        LlmProvider @default(OPENAI)
+  model           String      @default("gpt-3.5-turbo")
+  encryptedApiKey String
+  baseUrl         String?     // For Ollama or custom endpoints
+  isEnabled       Boolean     @default(false)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  usageLogs LlmUsageLog[]
+
+  @@map("user_llm_configs")
+}
+
+model LlmUsageLog {
+  id          String   @id @default(uuid())
+  userId      String
+  configId    String
+  tokensUsed  Int      @default(0)
+  requestType String
+  createdAt   DateTime @default(now())
+
+  user   User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  config UserLlmConfig @relation(fields: [configId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("llm_usage_logs")
+}
