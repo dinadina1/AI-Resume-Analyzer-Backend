@@ -20,6 +20,8 @@ export const prisma =
 if (env.isDev) globalForPrisma.prisma = prisma;
 
 export async function connectDatabase(): Promise<void> {
+  console.log("DATABASE_URL", env.database.url)
+
   try {
     await prisma.$connect();
     logger.info('✅ Database connected successfully');
