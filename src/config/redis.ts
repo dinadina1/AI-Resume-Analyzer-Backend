@@ -16,11 +16,11 @@ export function getRedisClient(): IORedis {
     tls: {},
 
     retryStrategy: (times: number) => {
-      if (times > 5) {
-        logger.error('Redis: Max retry attempts reached');
-        return null;
-      }
-      return Math.min(times * 300, 2000);
+      // if (times > 5) {
+      //   logger.error('Redis: Max retry attempts reached');
+      //   return null;
+      // }
+      return Math.min(times * 500, 5000);
     },
 
     reconnectOnError: (err) => {

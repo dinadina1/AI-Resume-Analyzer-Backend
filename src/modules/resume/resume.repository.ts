@@ -15,23 +15,59 @@ export class ResumeRepository {
 
   async findByUserId(userId: string, page: number, limit: number) {
     const skip = (page - 1) * limit;
+
     const [resumes, total] = await Promise.all([
       prisma.resume.findMany({
         where: { userId },
         skip,
         take: limit,
         orderBy: { createdAt: 'desc' },
-        include: {
+        select: {
+          id: true,
+          userId: true,
+          createdAt: true,
           analysisReports: {
-            orderBy: { createdAt: 'desc' },
             take: 1,
-            select: { overallScore: true, status: true },
+            orderBy: { createdAt: 'desc' },
+            select: {
+              overallScore: true,
+              status: true,
+            },
           },
         },
       }),
       prisma.resume.count({ where: { userId } }),
     ]);
-    return { resumes, total, page, limit, totalPages: Math.ceil(total / limit) };
+
+    return {
+      resumes: resumes.map(r => ({
+        ...r,
+        analysis: r.analysisReports?.[0] || null,
+      })),
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
+
+    // const skip = (page - 1) * limit;
+    // const [resumes, total] = await Promise.all([
+    //   prisma.resume.findMany({
+    //     where: { userId },
+    //     skip,
+    //     take: limit,
+    //     orderBy: { createdAt: 'desc' },
+    //     include: {
+    //       analysisReports: {
+    //         orderBy: { createdAt: 'desc' },
+    //         take: 1,
+    //         select: { overallScore: true, status: true },
+    //       },
+    //     },
+    //   }),
+    //   prisma.resume.count({ where: { userId } }),
+    // ]);
+    // return { resumes, total, page, limit, totalPages: Math.ceil(total / limit) };
   }
 
   async updateStatus(id: string, status: string | any) {
