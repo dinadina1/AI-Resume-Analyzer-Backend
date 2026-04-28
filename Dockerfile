@@ -1,31 +1,30 @@
-FROM node:20-alpine AS builder
+# ---------- Build Stage ----------
+FROM node:22-alpine AS builder
 
 WORKDIR /app
 
 COPY package*.json ./
-COPY prisma ./prisma/
-RUN npm ci
+RUN npm install
 
-COPY tsconfig.json ./
-COPY src ./src/
-RUN npm run prisma:generate && npm run build
+COPY . .
 
-# ─── Production stage ────────────────────────────────────────────────────────
-FROM node:20-alpine AS production
+# Generate Prisma client
+RUN npx prisma generate
+
+# Build TS → JS
+RUN npm run build && node postbuild.js
+
+# ---------- Production Stage ----------
+FROM node:22-alpine
 
 WORKDIR /app
 
-RUN addgroup -g 1001 -S nodejs && adduser -S nodejs -u 1001
-
-COPY --from=builder /app/dist ./dist
+# Copy only required files
+COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/prisma ./prisma
-COPY package.json ./
-
-RUN mkdir -p uploads logs && chown -R nodejs:nodejs /app
-
-USER nodejs
 
 EXPOSE 3000
 
-CMD ["sh", "-c", "npx prisma migrate deploy && node dist/server.js"]
+CMD ["node", "dist/server.js"]

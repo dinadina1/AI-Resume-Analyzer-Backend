@@ -1,7 +1,7 @@
 import { prisma } from '../../config/db';
 import { decrypt } from '../../utils/encryption';
 import { logger } from '../../utils/logger';
-import { LlmProvider } from '../../generated/prisma';
+import { LlmProvider } from '@prisma/client';
 import OpenAI from 'openai';
 
 export interface LlmSuggestionResult {

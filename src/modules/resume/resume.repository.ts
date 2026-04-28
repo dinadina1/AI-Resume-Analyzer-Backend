@@ -1,5 +1,5 @@
 import { prisma } from '../../config/db';
-import { Prisma } from '../../generated/prisma';
+import { Prisma } from '@prisma/client';
 
 export class ResumeRepository {
   async create(data: Prisma.ResumeCreateInput) {
