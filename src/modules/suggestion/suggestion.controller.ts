@@ -13,7 +13,7 @@ export class SuggestionController {
   async getSuggestions(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
     try {
       const suggestions = await this.service.getSuggestionsByResume(
-        req.params.resumeId,
+        req.params.resumeId as string,
         req.user!.userId
       );
       sendSuccess(res, suggestions, 'Suggestions fetched successfully');

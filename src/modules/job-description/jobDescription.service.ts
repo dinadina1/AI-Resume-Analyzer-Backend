@@ -16,7 +16,10 @@ export interface JdMatchResult {
   matchedSkills: string[];
   missingSkills: string[];
   totalJdSkills: number;
-  aiInsights: string[];
+  missingKeywords: string[];
+  suggestedKeywords: string[];
+  improvements: string[];
+  insights: string[];
   analysisSource: 'AI';
 }
 
@@ -46,45 +49,160 @@ export class JobDescriptionService {
       orderBy: { createdAt: 'desc' },
     });
 
-    const resumeText = latestReport?.rawText ?? '';
+    const resumeText = latestReport?.rawText?.trim() ?? '';
 
-    if (!resumeText.trim()) {
-      throw new AppError(
-        'Resume analysis is not complete yet. Please wait for the ATS analysis to finish before running JD matching.',
-        400
-      );
-    }
+    // if (!resumeText) {
+    //   throw new AppError(
+    //     'Resume analysis is not complete yet. Please wait for the ATS analysis to finish before running JD matching.',
+    //     400
+    //   );
+    // }
 
     // ── 3. AI does all the work — fully industry-agnostic ─────────────────────
-    const systemPrompt = `You are an expert ATS (Applicant Tracking System) analyst, senior recruiter, and career coach with experience across ALL industries — technology, finance, healthcare, marketing, legal, engineering, education, and more.
+    //     const systemPrompt = `You are an expert ATS (Applicant Tracking System) analyst, senior recruiter, and career coach with experience across ALL industries — technology, finance, healthcare, marketing, legal, engineering, education, and more.
 
-Analyze the match between the provided resume and job description with expert precision.
+    // Analyze the match between the provided resume and job description with expert precision.
 
-Return a valid JSON object with EXACTLY these keys:
-- "matchPercentage": integer 0–100 (ATS compatibility score, considering skills, experience, industry fit, keywords, seniority)
-- "matchedSkills": array of strings (skills/qualifications from the JD that the candidate clearly has)
-- "missingSkills": array of strings (important JD requirements the candidate lacks)
-- "insights": array of 4–5 specific, actionable improvement tips (how to better target this role)
+    // Return a valid JSON object with EXACTLY these keys:
+    // - "matchPercentage": integer 0–100 (ATS compatibility score, considering skills, experience, industry fit, keywords, seniority)
+    // - "matchedSkills": array of strings (skills/qualifications from the JD that the candidate clearly has)
+    // - "missingSkills": array of strings (important JD requirements the candidate lacks)
+    // - "insights": array of 4–5 specific, actionable improvement tips (how to better target this role)
 
-Be industry-aware: for a nurse applying to a nursing role, clinical skills matter more than technical skills. For a CFO role, financial acumen matters. Evaluate contextually.`;
+    // Be industry-aware: for a nurse applying to a nursing role, clinical skills matter more than technical skills. For a CFO role, financial acumen matters. Evaluate contextually.`;
 
-    const userPrompt = `Job Title: ${input.jdTitle}
+    //     const userPrompt = `Job Title: ${input.jdTitle}
+
+    // JOB DESCRIPTION:
+    // ${input.jdText.slice(0, 2500)}
+
+    // CANDIDATE RESUME:
+    // ${resumeText.slice(0, 2500)}
+
+    // Perform a comprehensive ATS compatibility analysis. Consider:
+    // 1. Skills and qualifications overlap
+    // 2. Experience level and years
+    // 3. Industry-specific requirements
+    // 4. Soft skills and leadership indicators
+    // 5. Education and certifications
+    // 6. Language and keyword alignment
+
+    // Return JSON only — no markdown, no explanation outside the JSON.`;
+
+    //     const systemPrompt = `
+    // You are an expert ATS (Applicant Tracking System) analyst and senior recruiter.
+
+    // You MUST return ONLY valid JSON.
+    // - No markdown
+    // - No explanation
+    // - No extra text
+    // - Output must start with { and end with }
+
+    // Analyze the match between the resume and job description.
+
+    // Return EXACTLY this JSON structure:
+
+    // {
+    //   "matchPercentage": number (0-100),
+
+    //   "matchedSkills": string[],
+    //   "missingSkills": string[],
+
+    //   "missingKeywords": string[],
+    //   "suggestedKeywords": string[],
+
+    //   "improvements": string[],
+
+    //   "insights": string[]
+    // }
+
+    // RULES:
+    // - "matchPercentage" = overall ATS compatibility based on skills, experience, and keyword alignment
+    // - "matchedSkills" = important skills present in BOTH resume and job description
+    // - "missingSkills" = important skills in job description NOT found in resume
+    // - "missingKeywords" = important keywords/phrases from job description missing in resume (not just tools, also concepts and domain terms)
+    // - "suggestedKeywords" = optimized ATS-friendly keywords the candidate should include in resume
+    // - "improvements" must be specific, actionable, and directly improve ATS score
+    // - "insights" must explain gaps and how to better align with the role
+
+    // Be industry-aware: evaluate based on role context (technical, healthcare, finance, etc.).
+    // `;
+
+    //     const userPrompt = `
+    // Job Title: ${input.jdTitle}
+
+    // --- JOB DESCRIPTION ---
+    // ${input.jdText.slice(0, 2500)}
+    // --- END JD ---
+
+    // --- RESUME ---
+    // ${resumeText.slice(0, 2500)}
+    // --- END RESUME ---
+
+    // Analyze ATS compatibility considering:
+    // 1. Skills and qualifications match
+    // 2. Experience level and relevance
+    // 3. Industry-specific requirements
+    // 4. Keyword alignment and density
+    // 5. Resume structure and clarity
+    // 6. Impact and measurable achievements
+
+    // Return ONLY valid JSON in the required format.
+    // `;
+
+    const systemPrompt = `
+You are an expert ATS (Applicant Tracking System) analyst and senior recruiter.
+
+You MUST return ONLY valid JSON.
+- No markdown
+- No explanation
+- No extra text
+- Output must start with { and end with }
+
+IMPORTANT RULES:
+- Only use the provided resume and job description
+- Do NOT assume missing skills if they are clearly present in the resume
+- Match skills even if formats differ (e.g., "React.js" = "React", "Node.js" = "Node")
+- Be accurate and conservative — do not hallucinate
+
+Return EXACTLY this JSON structure:
+
+{
+  "matchPercentage": number (0-100),
+
+  "matchedSkills": string[],
+  "missingSkills": string[],
+
+  "missingKeywords": string[],
+  "suggestedKeywords": string[],
+
+  "improvements": string[],
+
+  "insights": string[]
+}
+
+RULES:
+- "matchedSkills" = skills clearly present in BOTH resume and job description
+- "missingSkills" = skills in job description NOT found in resume
+- "missingKeywords" = important phrases or concepts from JD missing in resume
+- "suggestedKeywords" = ATS-friendly keywords the candidate should add
+- "matchPercentage" must reflect actual overlap (not random)
+- Do NOT return empty matchedSkills if clear matches exist
+- improvements must be actionable
+- insights must explain strengths and gaps clearly
+`;
+
+    const userPrompt = `
+Job Title: ${input.jdTitle}
 
 JOB DESCRIPTION:
 ${input.jdText.slice(0, 2500)}
 
-CANDIDATE RESUME:
+RESUME:
 ${resumeText.slice(0, 2500)}
 
-Perform a comprehensive ATS compatibility analysis. Consider:
-1. Skills and qualifications overlap
-2. Experience level and years
-3. Industry-specific requirements
-4. Soft skills and leadership indicators
-5. Education and certifications
-6. Language and keyword alignment
-
-Return JSON only — no markdown, no explanation outside the JSON.`;
+Analyze the ATS match and return JSON only.
+`;
 
     logger.info(
       `Running AI JD match for resume ${input.resumeId} via ${llmConfig.provider}:${llmConfig.model}`
@@ -119,18 +237,25 @@ Return JSON only — no markdown, no explanation outside the JSON.`;
       matchedSkills?: unknown;
       missingSkills?: unknown;
       insights?: unknown;
+      missingKeywords?: unknown;
+      suggestedKeywords?: unknown;
+      improvements?: unknown;
     }>(result.content);
 
     const matchPercentage =
       typeof parsed.matchPercentage === 'number' &&
-      parsed.matchPercentage >= 0 &&
-      parsed.matchPercentage <= 100
+        parsed.matchPercentage >= 0 &&
+        parsed.matchPercentage <= 100
         ? Math.round(parsed.matchPercentage)
         : 0;
 
     const matchedSkills = this.toStringArray(parsed.matchedSkills);
     const missingSkills = this.toStringArray(parsed.missingSkills);
     const aiInsights = this.toStringArray(parsed.insights);
+
+    const missingKeywords = this.toStringArray(parsed.missingKeywords);
+    const suggestedKeywords = this.toStringArray(parsed.suggestedKeywords);
+    const improvements = this.toStringArray(parsed.improvements);
 
     // ── 5. Persist JD and match result ────────────────────────────────────────
     const jd = await this.repo.create({
@@ -146,6 +271,10 @@ Return JSON only — no markdown, no explanation outside the JSON.`;
       matchPercentage,
       matchedSkills,
       missingSkills,
+      missingKeywords,
+      suggestedKeywords,
+      improvements,
+      insights: aiInsights,
     });
 
     return {
@@ -153,7 +282,10 @@ Return JSON only — no markdown, no explanation outside the JSON.`;
       matchedSkills,
       missingSkills,
       totalJdSkills: matchedSkills.length + missingSkills.length,
-      aiInsights,
+      missingKeywords,
+      suggestedKeywords,
+      improvements,
+      insights: aiInsights,
       analysisSource: 'AI',
     };
   }
@@ -164,6 +296,12 @@ Return JSON only — no markdown, no explanation outside the JSON.`;
 
   async getUserMatches(userId: string) {
     return this.repo.findMatchesByUser(userId);
+  }
+
+  async getMatchById(matchId: string, userId: string) {
+    const match = await this.repo.findMatchById(matchId, userId);
+    if (!match) throw new AppError('Match not found', 404);
+    return match;
   }
 
   private safeParseJson<T>(content: string): Partial<T> {

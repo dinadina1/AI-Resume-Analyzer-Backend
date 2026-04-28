@@ -13,7 +13,7 @@ export class AnalysisController {
   async getReportsByResume(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
     try {
       const reports = await this.service.getReportByResumeId(
-        req.params.resumeId,
+        req.params.resumeId as string,
         req.user!.userId
       );
       sendSuccess(res, reports, 'Analysis reports fetched successfully');
@@ -24,7 +24,7 @@ export class AnalysisController {
 
   async getReportById(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const report = await this.service.getReportById(req.params.id, req.user!.userId);
+      const report = await this.service.getReportById(req.params.id as string, req.user!.userId);
       sendSuccess(res, report, 'Analysis report fetched successfully');
     } catch (error) {
       next(error);

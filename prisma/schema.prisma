@@ -193,16 +193,32 @@ model JobDescription {
 }
 
 model JdMatch {
-  id              String   @id @default(uuid())
-  jobDescriptionId String
-  resumeId        String
-  matchPercentage Float
-  matchedSkills   String[]
-  missingSkills   String[]
-  createdAt       DateTime @default(now())
+  id                String   @id @default(uuid())
 
-  jobDescription JobDescription @relation(fields: [jobDescriptionId], references: [id], onDelete: Cascade)
-  resume         Resume         @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+  jobDescriptionId  String
+  resumeId          String
+
+  // 🎯 Core score
+  matchPercentage   Float
+
+  // 🧠 Skills
+  matchedSkills     String[]
+  missingSkills     String[]
+
+  // 🔍 Keywords (NEW)
+  missingKeywords   String[]
+  suggestedKeywords String[]
+
+  // 💡 Guidance
+  improvements      String[]
+  insights          String[]
+
+  createdAt         DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  // 🔗 Relations
+  jobDescription    JobDescription @relation(fields: [jobDescriptionId], references: [id], onDelete: Cascade)
+  resume            Resume         @relation(fields: [resumeId], references: [id], onDelete: Cascade)
 
   @@map("jd_matches")
 }

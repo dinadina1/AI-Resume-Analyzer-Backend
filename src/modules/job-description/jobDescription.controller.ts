@@ -46,4 +46,13 @@ export class JobDescriptionController {
       next(error);
     }
   }
+
+  async getMatchDetail(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const match = await this.service.getMatchById(req.params.matchId as string, req.user!.userId);
+      sendSuccess(res, match, 'Match detail fetched');
+    } catch (error) {
+      next(error);
+    }
+  }
 }

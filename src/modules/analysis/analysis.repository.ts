@@ -23,7 +23,7 @@ export class AnalysisRepository {
     });
   }
 
-  async updateStatus(id: string, status: string) {
+  async updateStatus(id: string, status: string | any) {
     return prisma.analysisReport.update({ where: { id }, data: { status } });
   }
 

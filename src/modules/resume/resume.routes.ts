@@ -18,4 +18,5 @@ resumeRouter.post(
 resumeRouter.get('/', (req, res, next) => controller.getAll(req, res, next));
 resumeRouter.get('/:id', (req, res, next) => controller.getOne(req, res, next));
 resumeRouter.get('/:id/status', (req, res, next) => controller.getStatus(req, res, next));
+resumeRouter.get('/:id/download', (req, res, next) => controller.download(req, res, next));
 resumeRouter.delete('/:id', (req, res, next) => controller.deleteOne(req, res, next));

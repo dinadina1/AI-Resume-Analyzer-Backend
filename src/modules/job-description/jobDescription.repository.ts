@@ -28,10 +28,20 @@ export class JobDescriptionRepository {
     return prisma.jdMatch.findMany({
       where: { jobDescription: { userId } },
       include: {
-        jobDescription: { select: { title: true } },
-        resume: { select: { originalName: true } },
+        jobDescription: { select: { id: true, title: true, content: true, createdAt: true } },
+        resume: { select: { id: true, originalName: true } },
       },
       orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  async findMatchById(matchId: string, userId: string) {
+    return prisma.jdMatch.findFirst({
+      where: { id: matchId, jobDescription: { userId } },
+      include: {
+        jobDescription: { select: { id: true, title: true, content: true, createdAt: true } },
+        resume: { select: { id: true, originalName: true } },
+      },
     });
   }
 }

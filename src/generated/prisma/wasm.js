@@ -214,7 +214,12 @@ exports.Prisma.JdMatchScalarFieldEnum = {
   matchPercentage: 'matchPercentage',
   matchedSkills: 'matchedSkills',
   missingSkills: 'missingSkills',
-  createdAt: 'createdAt'
+  missingKeywords: 'missingKeywords',
+  suggestedKeywords: 'suggestedKeywords',
+  improvements: 'improvements',
+  insights: 'insights',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.SuggestionScalarFieldEnum = {

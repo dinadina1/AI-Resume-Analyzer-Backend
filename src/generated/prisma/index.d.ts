@@ -11200,6 +11200,7 @@ export namespace Prisma {
     resumeId: string | null
     matchPercentage: number | null
     createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type JdMatchMaxAggregateOutputType = {
@@ -11208,6 +11209,7 @@ export namespace Prisma {
     resumeId: string | null
     matchPercentage: number | null
     createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type JdMatchCountAggregateOutputType = {
@@ -11217,7 +11219,12 @@ export namespace Prisma {
     matchPercentage: number
     matchedSkills: number
     missingSkills: number
+    missingKeywords: number
+    suggestedKeywords: number
+    improvements: number
+    insights: number
     createdAt: number
+    updatedAt: number
     _all: number
   }
 
@@ -11236,6 +11243,7 @@ export namespace Prisma {
     resumeId?: true
     matchPercentage?: true
     createdAt?: true
+    updatedAt?: true
   }
 
   export type JdMatchMaxAggregateInputType = {
@@ -11244,6 +11252,7 @@ export namespace Prisma {
     resumeId?: true
     matchPercentage?: true
     createdAt?: true
+    updatedAt?: true
   }
 
   export type JdMatchCountAggregateInputType = {
@@ -11253,7 +11262,12 @@ export namespace Prisma {
     matchPercentage?: true
     matchedSkills?: true
     missingSkills?: true
+    missingKeywords?: true
+    suggestedKeywords?: true
+    improvements?: true
+    insights?: true
     createdAt?: true
+    updatedAt?: true
     _all?: true
   }
 
@@ -11350,7 +11364,12 @@ export namespace Prisma {
     matchPercentage: number
     matchedSkills: string[]
     missingSkills: string[]
+    missingKeywords: string[]
+    suggestedKeywords: string[]
+    improvements: string[]
+    insights: string[]
     createdAt: Date
+    updatedAt: Date
     _count: JdMatchCountAggregateOutputType | null
     _avg: JdMatchAvgAggregateOutputType | null
     _sum: JdMatchSumAggregateOutputType | null
@@ -11379,7 +11398,12 @@ export namespace Prisma {
     matchPercentage?: boolean
     matchedSkills?: boolean
     missingSkills?: boolean
+    missingKeywords?: boolean
+    suggestedKeywords?: boolean
+    improvements?: boolean
+    insights?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
     jobDescription?: boolean | JobDescriptionDefaultArgs<ExtArgs>
     resume?: boolean | ResumeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["jdMatch"]>
@@ -11391,7 +11415,12 @@ export namespace Prisma {
     matchPercentage?: boolean
     matchedSkills?: boolean
     missingSkills?: boolean
+    missingKeywords?: boolean
+    suggestedKeywords?: boolean
+    improvements?: boolean
+    insights?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
     jobDescription?: boolean | JobDescriptionDefaultArgs<ExtArgs>
     resume?: boolean | ResumeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["jdMatch"]>
@@ -11403,7 +11432,12 @@ export namespace Prisma {
     matchPercentage?: boolean
     matchedSkills?: boolean
     missingSkills?: boolean
+    missingKeywords?: boolean
+    suggestedKeywords?: boolean
+    improvements?: boolean
+    insights?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
   }
 
   export type JdMatchInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -11428,7 +11462,12 @@ export namespace Prisma {
       matchPercentage: number
       matchedSkills: string[]
       missingSkills: string[]
+      missingKeywords: string[]
+      suggestedKeywords: string[]
+      improvements: string[]
+      insights: string[]
       createdAt: Date
+      updatedAt: Date
     }, ExtArgs["result"]["jdMatch"]>
     composites: {}
   }
@@ -11830,7 +11869,12 @@ export namespace Prisma {
     readonly matchPercentage: FieldRef<"JdMatch", 'Float'>
     readonly matchedSkills: FieldRef<"JdMatch", 'String[]'>
     readonly missingSkills: FieldRef<"JdMatch", 'String[]'>
+    readonly missingKeywords: FieldRef<"JdMatch", 'String[]'>
+    readonly suggestedKeywords: FieldRef<"JdMatch", 'String[]'>
+    readonly improvements: FieldRef<"JdMatch", 'String[]'>
+    readonly insights: FieldRef<"JdMatch", 'String[]'>
     readonly createdAt: FieldRef<"JdMatch", 'DateTime'>
+    readonly updatedAt: FieldRef<"JdMatch", 'DateTime'>
   }
     
 
@@ -15312,7 +15356,12 @@ export namespace Prisma {
     matchPercentage: 'matchPercentage',
     matchedSkills: 'matchedSkills',
     missingSkills: 'missingSkills',
-    createdAt: 'createdAt'
+    missingKeywords: 'missingKeywords',
+    suggestedKeywords: 'suggestedKeywords',
+    improvements: 'improvements',
+    insights: 'insights',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
   };
 
   export type JdMatchScalarFieldEnum = (typeof JdMatchScalarFieldEnum)[keyof typeof JdMatchScalarFieldEnum]
@@ -16165,7 +16214,12 @@ export namespace Prisma {
     matchPercentage?: FloatFilter<"JdMatch"> | number
     matchedSkills?: StringNullableListFilter<"JdMatch">
     missingSkills?: StringNullableListFilter<"JdMatch">
+    missingKeywords?: StringNullableListFilter<"JdMatch">
+    suggestedKeywords?: StringNullableListFilter<"JdMatch">
+    improvements?: StringNullableListFilter<"JdMatch">
+    insights?: StringNullableListFilter<"JdMatch">
     createdAt?: DateTimeFilter<"JdMatch"> | Date | string
+    updatedAt?: DateTimeFilter<"JdMatch"> | Date | string
     jobDescription?: XOR<JobDescriptionRelationFilter, JobDescriptionWhereInput>
     resume?: XOR<ResumeRelationFilter, ResumeWhereInput>
   }
@@ -16177,7 +16231,12 @@ export namespace Prisma {
     matchPercentage?: SortOrder
     matchedSkills?: SortOrder
     missingSkills?: SortOrder
+    missingKeywords?: SortOrder
+    suggestedKeywords?: SortOrder
+    improvements?: SortOrder
+    insights?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
     jobDescription?: JobDescriptionOrderByWithRelationInput
     resume?: ResumeOrderByWithRelationInput
   }
@@ -16192,7 +16251,12 @@ export namespace Prisma {
     matchPercentage?: FloatFilter<"JdMatch"> | number
     matchedSkills?: StringNullableListFilter<"JdMatch">
     missingSkills?: StringNullableListFilter<"JdMatch">
+    missingKeywords?: StringNullableListFilter<"JdMatch">
+    suggestedKeywords?: StringNullableListFilter<"JdMatch">
+    improvements?: StringNullableListFilter<"JdMatch">
+    insights?: StringNullableListFilter<"JdMatch">
     createdAt?: DateTimeFilter<"JdMatch"> | Date | string
+    updatedAt?: DateTimeFilter<"JdMatch"> | Date | string
     jobDescription?: XOR<JobDescriptionRelationFilter, JobDescriptionWhereInput>
     resume?: XOR<ResumeRelationFilter, ResumeWhereInput>
   }, "id">
@@ -16204,7 +16268,12 @@ export namespace Prisma {
     matchPercentage?: SortOrder
     matchedSkills?: SortOrder
     missingSkills?: SortOrder
+    missingKeywords?: SortOrder
+    suggestedKeywords?: SortOrder
+    improvements?: SortOrder
+    insights?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
     _count?: JdMatchCountOrderByAggregateInput
     _avg?: JdMatchAvgOrderByAggregateInput
     _max?: JdMatchMaxOrderByAggregateInput
@@ -16222,7 +16291,12 @@ export namespace Prisma {
     matchPercentage?: FloatWithAggregatesFilter<"JdMatch"> | number
     matchedSkills?: StringNullableListFilter<"JdMatch">
     missingSkills?: StringNullableListFilter<"JdMatch">
+    missingKeywords?: StringNullableListFilter<"JdMatch">
+    suggestedKeywords?: StringNullableListFilter<"JdMatch">
+    improvements?: StringNullableListFilter<"JdMatch">
+    insights?: StringNullableListFilter<"JdMatch">
     createdAt?: DateTimeWithAggregatesFilter<"JdMatch"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"JdMatch"> | Date | string
   }
 
   export type SuggestionWhereInput = {
@@ -17091,7 +17165,12 @@ export namespace Prisma {
     matchPercentage: number
     matchedSkills?: JdMatchCreatematchedSkillsInput | string[]
     missingSkills?: JdMatchCreatemissingSkillsInput | string[]
+    missingKeywords?: JdMatchCreatemissingKeywordsInput | string[]
+    suggestedKeywords?: JdMatchCreatesuggestedKeywordsInput | string[]
+    improvements?: JdMatchCreateimprovementsInput | string[]
+    insights?: JdMatchCreateinsightsInput | string[]
     createdAt?: Date | string
+    updatedAt?: Date | string
     jobDescription: JobDescriptionCreateNestedOneWithoutMatchesInput
     resume: ResumeCreateNestedOneWithoutJdMatchesInput
   }
@@ -17103,7 +17182,12 @@ export namespace Prisma {
     matchPercentage: number
     matchedSkills?: JdMatchCreatematchedSkillsInput | string[]
     missingSkills?: JdMatchCreatemissingSkillsInput | string[]
+    missingKeywords?: JdMatchCreatemissingKeywordsInput | string[]
+    suggestedKeywords?: JdMatchCreatesuggestedKeywordsInput | string[]
+    improvements?: JdMatchCreateimprovementsInput | string[]
+    insights?: JdMatchCreateinsightsInput | string[]
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type JdMatchUpdateInput = {
@@ -17111,7 +17195,12 @@ export namespace Prisma {
     matchPercentage?: FloatFieldUpdateOperationsInput | number
     matchedSkills?: JdMatchUpdatematchedSkillsInput | string[]
     missingSkills?: JdMatchUpdatemissingSkillsInput | string[]
+    missingKeywords?: JdMatchUpdatemissingKeywordsInput | string[]
+    suggestedKeywords?: JdMatchUpdatesuggestedKeywordsInput | string[]
+    improvements?: JdMatchUpdateimprovementsInput | string[]
+    insights?: JdMatchUpdateinsightsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     jobDescription?: JobDescriptionUpdateOneRequiredWithoutMatchesNestedInput
     resume?: ResumeUpdateOneRequiredWithoutJdMatchesNestedInput
   }
@@ -17123,7 +17212,12 @@ export namespace Prisma {
     matchPercentage?: FloatFieldUpdateOperationsInput | number
     matchedSkills?: JdMatchUpdatematchedSkillsInput | string[]
     missingSkills?: JdMatchUpdatemissingSkillsInput | string[]
+    missingKeywords?: JdMatchUpdatemissingKeywordsInput | string[]
+    suggestedKeywords?: JdMatchUpdatesuggestedKeywordsInput | string[]
+    improvements?: JdMatchUpdateimprovementsInput | string[]
+    insights?: JdMatchUpdateinsightsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type JdMatchCreateManyInput = {
@@ -17133,7 +17227,12 @@ export namespace Prisma {
     matchPercentage: number
     matchedSkills?: JdMatchCreatematchedSkillsInput | string[]
     missingSkills?: JdMatchCreatemissingSkillsInput | string[]
+    missingKeywords?: JdMatchCreatemissingKeywordsInput | string[]
+    suggestedKeywords?: JdMatchCreatesuggestedKeywordsInput | string[]
+    improvements?: JdMatchCreateimprovementsInput | string[]
+    insights?: JdMatchCreateinsightsInput | string[]
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type JdMatchUpdateManyMutationInput = {
@@ -17141,7 +17240,12 @@ export namespace Prisma {
     matchPercentage?: FloatFieldUpdateOperationsInput | number
     matchedSkills?: JdMatchUpdatematchedSkillsInput | string[]
     missingSkills?: JdMatchUpdatemissingSkillsInput | string[]
+    missingKeywords?: JdMatchUpdatemissingKeywordsInput | string[]
+    suggestedKeywords?: JdMatchUpdatesuggestedKeywordsInput | string[]
+    improvements?: JdMatchUpdateimprovementsInput | string[]
+    insights?: JdMatchUpdateinsightsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type JdMatchUncheckedUpdateManyInput = {
@@ -17151,7 +17255,12 @@ export namespace Prisma {
     matchPercentage?: FloatFieldUpdateOperationsInput | number
     matchedSkills?: JdMatchUpdatematchedSkillsInput | string[]
     missingSkills?: JdMatchUpdatemissingSkillsInput | string[]
+    missingKeywords?: JdMatchUpdatemissingKeywordsInput | string[]
+    suggestedKeywords?: JdMatchUpdatesuggestedKeywordsInput | string[]
+    improvements?: JdMatchUpdateimprovementsInput | string[]
+    insights?: JdMatchUpdateinsightsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type SuggestionCreateInput = {
@@ -18018,7 +18127,12 @@ export namespace Prisma {
     matchPercentage?: SortOrder
     matchedSkills?: SortOrder
     missingSkills?: SortOrder
+    missingKeywords?: SortOrder
+    suggestedKeywords?: SortOrder
+    improvements?: SortOrder
+    insights?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type JdMatchAvgOrderByAggregateInput = {
@@ -18031,6 +18145,7 @@ export namespace Prisma {
     resumeId?: SortOrder
     matchPercentage?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type JdMatchMinOrderByAggregateInput = {
@@ -18039,6 +18154,7 @@ export namespace Prisma {
     resumeId?: SortOrder
     matchPercentage?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type JdMatchSumOrderByAggregateInput = {
@@ -18989,6 +19105,22 @@ export namespace Prisma {
     set: string[]
   }
 
+  export type JdMatchCreatemissingKeywordsInput = {
+    set: string[]
+  }
+
+  export type JdMatchCreatesuggestedKeywordsInput = {
+    set: string[]
+  }
+
+  export type JdMatchCreateimprovementsInput = {
+    set: string[]
+  }
+
+  export type JdMatchCreateinsightsInput = {
+    set: string[]
+  }
+
   export type JobDescriptionCreateNestedOneWithoutMatchesInput = {
     create?: XOR<JobDescriptionCreateWithoutMatchesInput, JobDescriptionUncheckedCreateWithoutMatchesInput>
     connectOrCreate?: JobDescriptionCreateOrConnectWithoutMatchesInput
@@ -19007,6 +19139,26 @@ export namespace Prisma {
   }
 
   export type JdMatchUpdatemissingSkillsInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type JdMatchUpdatemissingKeywordsInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type JdMatchUpdatesuggestedKeywordsInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type JdMatchUpdateimprovementsInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type JdMatchUpdateinsightsInput = {
     set?: string[]
     push?: string | string[]
   }
@@ -20047,7 +20199,12 @@ export namespace Prisma {
     matchPercentage: number
     matchedSkills?: JdMatchCreatematchedSkillsInput | string[]
     missingSkills?: JdMatchCreatemissingSkillsInput | string[]
+    missingKeywords?: JdMatchCreatemissingKeywordsInput | string[]
+    suggestedKeywords?: JdMatchCreatesuggestedKeywordsInput | string[]
+    improvements?: JdMatchCreateimprovementsInput | string[]
+    insights?: JdMatchCreateinsightsInput | string[]
     createdAt?: Date | string
+    updatedAt?: Date | string
     jobDescription: JobDescriptionCreateNestedOneWithoutMatchesInput
   }
 
@@ -20057,7 +20214,12 @@ export namespace Prisma {
     matchPercentage: number
     matchedSkills?: JdMatchCreatematchedSkillsInput | string[]
     missingSkills?: JdMatchCreatemissingSkillsInput | string[]
+    missingKeywords?: JdMatchCreatemissingKeywordsInput | string[]
+    suggestedKeywords?: JdMatchCreatesuggestedKeywordsInput | string[]
+    improvements?: JdMatchCreateimprovementsInput | string[]
+    insights?: JdMatchCreateinsightsInput | string[]
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type JdMatchCreateOrConnectWithoutResumeInput = {
@@ -20253,7 +20415,12 @@ export namespace Prisma {
     matchPercentage?: FloatFilter<"JdMatch"> | number
     matchedSkills?: StringNullableListFilter<"JdMatch">
     missingSkills?: StringNullableListFilter<"JdMatch">
+    missingKeywords?: StringNullableListFilter<"JdMatch">
+    suggestedKeywords?: StringNullableListFilter<"JdMatch">
+    improvements?: StringNullableListFilter<"JdMatch">
+    insights?: StringNullableListFilter<"JdMatch">
     createdAt?: DateTimeFilter<"JdMatch"> | Date | string
+    updatedAt?: DateTimeFilter<"JdMatch"> | Date | string
   }
 
   export type SuggestionUpsertWithWhereUniqueWithoutResumeInput = {
@@ -20698,7 +20865,12 @@ export namespace Prisma {
     matchPercentage: number
     matchedSkills?: JdMatchCreatematchedSkillsInput | string[]
     missingSkills?: JdMatchCreatemissingSkillsInput | string[]
+    missingKeywords?: JdMatchCreatemissingKeywordsInput | string[]
+    suggestedKeywords?: JdMatchCreatesuggestedKeywordsInput | string[]
+    improvements?: JdMatchCreateimprovementsInput | string[]
+    insights?: JdMatchCreateinsightsInput | string[]
     createdAt?: Date | string
+    updatedAt?: Date | string
     resume: ResumeCreateNestedOneWithoutJdMatchesInput
   }
 
@@ -20708,7 +20880,12 @@ export namespace Prisma {
     matchPercentage: number
     matchedSkills?: JdMatchCreatematchedSkillsInput | string[]
     missingSkills?: JdMatchCreatemissingSkillsInput | string[]
+    missingKeywords?: JdMatchCreatemissingKeywordsInput | string[]
+    suggestedKeywords?: JdMatchCreatesuggestedKeywordsInput | string[]
+    improvements?: JdMatchCreateimprovementsInput | string[]
+    insights?: JdMatchCreateinsightsInput | string[]
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type JdMatchCreateOrConnectWithoutJobDescriptionInput = {
@@ -21516,7 +21693,12 @@ export namespace Prisma {
     matchPercentage: number
     matchedSkills?: JdMatchCreatematchedSkillsInput | string[]
     missingSkills?: JdMatchCreatemissingSkillsInput | string[]
+    missingKeywords?: JdMatchCreatemissingKeywordsInput | string[]
+    suggestedKeywords?: JdMatchCreatesuggestedKeywordsInput | string[]
+    improvements?: JdMatchCreateimprovementsInput | string[]
+    insights?: JdMatchCreateinsightsInput | string[]
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type SuggestionCreateManyResumeInput = {
@@ -21620,7 +21802,12 @@ export namespace Prisma {
     matchPercentage?: FloatFieldUpdateOperationsInput | number
     matchedSkills?: JdMatchUpdatematchedSkillsInput | string[]
     missingSkills?: JdMatchUpdatemissingSkillsInput | string[]
+    missingKeywords?: JdMatchUpdatemissingKeywordsInput | string[]
+    suggestedKeywords?: JdMatchUpdatesuggestedKeywordsInput | string[]
+    improvements?: JdMatchUpdateimprovementsInput | string[]
+    insights?: JdMatchUpdateinsightsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     jobDescription?: JobDescriptionUpdateOneRequiredWithoutMatchesNestedInput
   }
 
@@ -21630,7 +21817,12 @@ export namespace Prisma {
     matchPercentage?: FloatFieldUpdateOperationsInput | number
     matchedSkills?: JdMatchUpdatematchedSkillsInput | string[]
     missingSkills?: JdMatchUpdatemissingSkillsInput | string[]
+    missingKeywords?: JdMatchUpdatemissingKeywordsInput | string[]
+    suggestedKeywords?: JdMatchUpdatesuggestedKeywordsInput | string[]
+    improvements?: JdMatchUpdateimprovementsInput | string[]
+    insights?: JdMatchUpdateinsightsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type JdMatchUncheckedUpdateManyWithoutResumeInput = {
@@ -21639,7 +21831,12 @@ export namespace Prisma {
     matchPercentage?: FloatFieldUpdateOperationsInput | number
     matchedSkills?: JdMatchUpdatematchedSkillsInput | string[]
     missingSkills?: JdMatchUpdatemissingSkillsInput | string[]
+    missingKeywords?: JdMatchUpdatemissingKeywordsInput | string[]
+    suggestedKeywords?: JdMatchUpdatesuggestedKeywordsInput | string[]
+    improvements?: JdMatchUpdateimprovementsInput | string[]
+    insights?: JdMatchUpdateinsightsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type SuggestionUpdateWithoutResumeInput = {
@@ -21738,7 +21935,12 @@ export namespace Prisma {
     matchPercentage: number
     matchedSkills?: JdMatchCreatematchedSkillsInput | string[]
     missingSkills?: JdMatchCreatemissingSkillsInput | string[]
+    missingKeywords?: JdMatchCreatemissingKeywordsInput | string[]
+    suggestedKeywords?: JdMatchCreatesuggestedKeywordsInput | string[]
+    improvements?: JdMatchCreateimprovementsInput | string[]
+    insights?: JdMatchCreateinsightsInput | string[]
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type JdMatchUpdateWithoutJobDescriptionInput = {
@@ -21746,7 +21948,12 @@ export namespace Prisma {
     matchPercentage?: FloatFieldUpdateOperationsInput | number
     matchedSkills?: JdMatchUpdatematchedSkillsInput | string[]
     missingSkills?: JdMatchUpdatemissingSkillsInput | string[]
+    missingKeywords?: JdMatchUpdatemissingKeywordsInput | string[]
+    suggestedKeywords?: JdMatchUpdatesuggestedKeywordsInput | string[]
+    improvements?: JdMatchUpdateimprovementsInput | string[]
+    insights?: JdMatchUpdateinsightsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     resume?: ResumeUpdateOneRequiredWithoutJdMatchesNestedInput
   }
 
@@ -21756,7 +21963,12 @@ export namespace Prisma {
     matchPercentage?: FloatFieldUpdateOperationsInput | number
     matchedSkills?: JdMatchUpdatematchedSkillsInput | string[]
     missingSkills?: JdMatchUpdatemissingSkillsInput | string[]
+    missingKeywords?: JdMatchUpdatemissingKeywordsInput | string[]
+    suggestedKeywords?: JdMatchUpdatesuggestedKeywordsInput | string[]
+    improvements?: JdMatchUpdateimprovementsInput | string[]
+    insights?: JdMatchUpdateinsightsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type JdMatchUncheckedUpdateManyWithoutJobDescriptionInput = {
@@ -21765,7 +21977,12 @@ export namespace Prisma {
     matchPercentage?: FloatFieldUpdateOperationsInput | number
     matchedSkills?: JdMatchUpdatematchedSkillsInput | string[]
     missingSkills?: JdMatchUpdatemissingSkillsInput | string[]
+    missingKeywords?: JdMatchUpdatemissingKeywordsInput | string[]
+    suggestedKeywords?: JdMatchUpdatesuggestedKeywordsInput | string[]
+    improvements?: JdMatchUpdateimprovementsInput | string[]
+    insights?: JdMatchUpdateinsightsInput | string[]
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type LlmUsageLogCreateManyConfigInput = {

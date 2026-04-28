@@ -253,17 +253,11 @@ export class LlmService {
 
     try {
       const result = await dispatchToProvider(
-        // {
-        //   provider: config.provider,
-        //   model: config.model,
-        //   apiKey: decrypt(config.encryptedApiKey),
-        //   baseUrl: config.baseUrl,
-        // },
         {
-          provider: 'GEMINI',
-          model: 'gemini-1.5-flash', // safe & supported
-          apiKey: 'AIzaSyBYvpLUdZpVzto1XcGvixXUO9bJ4nT17xQ', // 🔥 paste your key here
-          baseUrl: 'https://generativelanguage.googleapis.com/v1beta'
+          provider: config.provider,
+          model: config.model,
+          apiKey: decrypt(config.encryptedApiKey),
+          baseUrl: config.baseUrl,
         },
         {
           systemPrompt: 'You are a professional resume coach. Give concise, actionable suggestions to improve the resume for ATS systems.',

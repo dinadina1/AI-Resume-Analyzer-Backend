@@ -34,7 +34,7 @@ export class ResumeRepository {
     return { resumes, total, page, limit, totalPages: Math.ceil(total / limit) };
   }
 
-  async updateStatus(id: string, status: string) {
+  async updateStatus(id: string, status: string | any) {
     return prisma.resume.update({ where: { id }, data: { status } });
   }
 
