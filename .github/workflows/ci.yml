@@ -24,4 +24,4 @@ jobs:
         run: npx prisma generate
 
       - name: Build
-        run: npm run build && node postbuild.js
+        run: npm run build
