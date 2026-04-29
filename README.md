@@ -1,208 +1,303 @@
-# 🧠 AI Resume Analyzer
+# 🧠 AI Resume Analyzer — Backend
 
-A production-ready full-stack AI Resume Analyzer with ATS scoring, JD matching, async processing, and optional LLM suggestions.
-
----
-
-## 🏗️ Tech Stack
-
-| Layer | Technology |
-|---|---|
-| Frontend | React 18 + Vite + TypeScript + Redux + TanStack Query |
-| Styling | TailwindCSS v3 |
-| Backend | Node.js + Express + TypeScript |
-| Database | PostgreSQL + Prisma ORM |
-| Queue | BullMQ + Redis |
-| Auth | JWT (Access + Refresh Tokens) |
-| AI | OpenAI (optional, user-configured) |
+A scalable backend built with **Node.js, Express, Prisma, and PostgreSQL** for AI-driven resume analysis and job matching.
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Live API
 
-### Prerequisites
-- Node.js 20+
-- Docker Desktop (for PostgreSQL + Redis)
-
-### 1. Start Infrastructure
-
-```bash
-cd AI_Resume_analyzer_backend
-docker-compose up postgres redis -d
-```
-
-### 2. Backend Setup
-
-```bash
-cd AI_Resume_analyzer_backend
-cp .env.example .env          # Edit your .env values
-npm install
-npm run prisma:migrate        # Run migrations
-npm run prisma:seed           # Seed admin + test user (optional)
-npm run dev                   # Start on :3000
-```
-
-### 3. Frontend Setup
-
-```bash
-cd AI_Resume_analyzer_frontend
-npm install
-npm run dev                   # Start on :5173
-```
-
-### 4. Open App
-
-```
-http://localhost:5173
-```
+👉 https://ai-resume-analyzer-backend-hdh5.onrender.com
 
 ---
 
-## 🔑 Default Test Credentials (after seed)
+## 🧠 Product Overview
 
-| Role | Email | Password |
-|---|---|---|
-| Admin | admin@airesumeanalyzer.com | Admin@1234 |
-| User | test@airesumeanalyzer.com | Test@1234 |
+This backend powers:
 
----
-
-## 📁 Project Structure
-
-```
-AI Resume Analyzer/
-├── AI_Resume_analyzer_backend/
-│   ├── src/
-│   │   ├── config/          # env, db, redis
-│   │   ├── modules/         # auth, user, resume, analysis, jd, suggestion, llm
-│   │   ├── queue/           # BullMQ queue + worker + jobs
-│   │   ├── middleware/       # auth, rbac, error, rate-limit, upload
-│   │   ├── lib/             # pdfParser, llm.service
-│   │   ├── utils/           # logger, response, token, encryption
-│   │   └── routes/          # route aggregator
-│   ├── prisma/
-│   │   └── schema.prisma    # Full DB schema
-│   └── tests/               # Jest unit tests
-│
-└── AI_Resume_analyzer_frontend/
-    └── src/
-        ├── app/             # Redux store + hooks
-        ├── components/      # Atomic Design (atoms → templates)
-        ├── features/        # Redux slices
-        ├── pages/           # Route-level pages
-        ├── services/        # Axios API layer
-        ├── query/           # TanStack Query client
-        └── routes/          # AppRoutes
-```
+- ATS resume analysis
+- Job Description matching
+- AI-based insights and suggestions
+- Resume history tracking
+- Background job processing
 
 ---
 
-## 🔧 Key Scripts
+## ✨ Features
 
-### Backend
-
-| Command | Description |
-|---|---|
-| `npm run dev` | Start dev server with ts-node-dev |
-| `npm run build` | Compile TypeScript |
-| `npm run prisma:migrate` | Run DB migrations |
-| `npm run prisma:studio` | Open Prisma Studio |
-| `npm run prisma:seed` | Seed database |
-| `npm test` | Run Jest unit tests |
-
-### Frontend
-
-| Command | Description |
-|---|---|
-| `npm run dev` | Start Vite dev server |
-| `npm run build` | Production build |
-| `npm run lint` | ESLint |
+### 🔐 Authentication
+- JWT (Access + Refresh tokens)
+- Secure encrypted keys
+- Rate limiting
 
 ---
 
-## 🌐 API Endpoints
+### 🤖 AI Integration
+Supports multiple AI providers:
+
+- OpenAI
+- Gemini
+- Grok
+- Anthropic
+- Mistral
+
+---
+
+### 📄 Resume Processing
+- Upload resumes (PDF/DOCX)
+- Extract content
+- ATS scoring
+- Format & keyword analysis
+
+---
+
+### 📊 Job Matching
+- Resume vs Job Description
+- Match score
+- Missing keywords
+- Suggestions & insights
+
+---
+
+### ⚙️ Background Jobs
+- BullMQ queue system
+- Async resume processing
+
+---
+
+### ⚡ Performance
+- Redis caching
+- PostgreSQL (Supabase)
+- Prisma ORM
+
+---
+
+## 🛠️ Tech Stack
+
+- Node.js + Express
+- Prisma ORM
+- PostgreSQL
+- Redis
+- BullMQ
+- Docker
+
+---
+
+## 🔌 API Endpoints
 
 ### Auth
+
 ```
-POST   /api/v1/auth/signup
+POST   /api/v1/auth/register
 POST   /api/v1/auth/login
 POST   /api/v1/auth/refresh
-POST   /api/v1/auth/logout      [Protected]
-GET    /api/v1/auth/me          [Protected]
 ```
 
 ### Resumes
+
 ```
-POST   /api/v1/resumes/upload   [Protected, PDF only]
-GET    /api/v1/resumes          [Protected]
-GET    /api/v1/resumes/:id      [Protected]
+POST   /api/v1/resumes/upload
+GET    /api/v1/resumes
+GET    /api/v1/resumes/:id
 GET    /api/v1/resumes/:id/status
 DELETE /api/v1/resumes/:id
 ```
 
 ### Analysis
+
 ```
 GET    /api/v1/analysis/resume/:resumeId
 GET    /api/v1/analysis/:id
 ```
 
-### JD Matching
+### Job Descriptions
+
 ```
 POST   /api/v1/job-descriptions/match
-GET    /api/v1/job-descriptions/matches
-```
-
-### LLM Config
-```
-GET    /api/v1/llm/config
-POST   /api/v1/llm/config
-PATCH  /api/v1/llm/config/toggle
-GET    /api/v1/llm/usage
+GET    /api/v1/job-descriptions
+GET    /api/v1/job-descriptions/:id/matches
 ```
 
 ---
 
-## 🏥 Health Check
+## 📦 Setup
+
+### Clone
+
+git clone https://github.com/yourusername/AI_Resume_analyzer_backend.git
+cd AI_Resume_analyzer_backend
+
+---
+
+### Environment Variables
+
+Create a `.env` file:
+
+```bash
+cp .env.example .env
+```
+
+Fill in your values (PostgreSQL, Redis, AI keys, etc.)
+
+---
+
+### Install Dependencies
+
+npm install
+
+---
+
+### Prisma Setup
+
+Run migrations:
+
+npm run prisma:migrate
+
+Seed database (optional):
+
+npm run prisma:seed
+
+---
+
+### Start Server
+
+npm run dev
+
+The API will run on port `3000`
+
+---
+
+## 🚀 Docker Setup
+
+### Start Services
+
+docker-compose up -d
+
+### Stop Services
+
+docker-compose down
+
+---
+
+## 🧪 Testing
+
+Run tests:
+
+npm test
+
+---
+
+## 📦 Deployment (Render)
+
+### 1. Push to GitHub
+
+git push origin main
+
+---
+
+### 2. Create Render Service
+
+- Go to Render
+- New → Web Service
+- Select your GitHub repo
+- Build Command: `npm run build`
+- Start Command: `node dist/server.js`
+- Add environment variables from your `.env`
+- Deploy ✅
+
+---
+
+## 🛠️ Development Setup
+
+### Run with Auto-Reload
+
+npm run dev
+
+### Debugging
+
+Enable debug logs:
+
+```bash
+DEBUG=ai-resume:* npm run dev
+```
+
+---
+
+## 🔧 AI Configuration
+
+Send POST requests to:
 
 ```
-GET /health
+POST /api/v1/llm/config
 ```
+
+With:
+
+```json
+{
+  "provider": "openai",
+  "apiKey": "your-key"
+}
+```
+
+---
+
+## 🌐 Frontend Integration
+
+Add these base URLs to your frontend:
+
+- API URL: `https://ai-resume-analyzer-backend-hdh5.onrender.com`
+
+---
+
+## 📁 File Structure
+
+```
+src/
+├── modules/             # Auth, User, Resume, Analysis, JD, LLM, Suggestion
+├── config/              # Database, Redis, Environment
+├── middleware/          # Auth, Rate Limit, Error Handling
+├── routes/              # API Routes
+├── utils/               # Helpers, Logger, Encryption
+├── queue/               # BullMQ jobs and worker
+├── generated/           # Prisma client & migrations
+└── server.ts            # Application entry point
+```
+
+---
+
+## 📝 API Documentation
+
+Full OpenAPI 3.0 documentation is available at:
+
+👉 https://ai-resume-analyzer-backend-hdh5.onrender.com/api/docs
 
 ---
 
 ## 🔒 Security
 
-- JWT access tokens (15min) + refresh tokens (7d)
-- bcrypt password hashing (12 rounds)
-- AES-256 encrypted LLM API keys
-- Helmet security headers
-- Rate limiting (global + auth + upload)
-- RBAC (USER / ADMIN roles)
+- JWT tokens (15min access, 7d refresh)
+- bcrypt password hashing
+- AES-256 encryption for AI keys
+- Rate limiting
+- Helmet security middleware
 
 ---
 
-## 🐳 Full Docker Deploy
+## 🤝 Contributing
 
-```bash
-cd AI_Resume_analyzer_backend
-docker-compose up --build
-```
-
-This starts PostgreSQL, Redis, and the backend API.
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Submit a Pull Request
 
 ---
 
-## 🧪 ATS Score Algorithm
+## 🙏 License
 
-| Section | Weight | Logic |
-|---|---|---|
-| Skills | 40% | Count of detected skills vs. threshold |
-| Keywords | 30% | Action verbs and ATS keyword frequency |
-| Experience | 20% | Job entries, date ranges, years mentioned |
-| Formatting | 10% | Word count, page count, contact info, links |
+MIT © 2026
 
 ---
 
-## ⚙️ Environment Variables
+## 📞 Support
 
-See `.env.example` in `AI_Resume_analyzer_backend/` for all required variables.
+For issues or questions, please open an issue on GitHub.
